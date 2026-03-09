@@ -14,6 +14,12 @@ export default function AuthorsPage() {
 
   const [editingAuthor, setEditingAuthor] = useState<Author | null>(null); // no hay nadie siendo editado inicialmente
 
+  const [search, setSearch] = useState("");
+
+  const filteredAuthors = authors.filter((author) =>
+    author.name.toLowerCase().includes(search.toLowerCase()),
+  );
+
   const handleSubmit = (e) => {
     e.preventDefault(); // evitar recarga
     setSubmitted(true);
@@ -223,43 +229,59 @@ export default function AuthorsPage() {
             Crear Nuevo Autor
           </Link>
         </div>
+        <div className="mb-4">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar autor..."
+            className="w-full rounded-xl bg-mauve-200 px-4 py-2.5 text-mauve-900 "
+          />
+        </div>
 
         <div className="grid grid-cols-2 gap-6">
-          {authors.map((author) => (
-            <div
-              key={author.id}
-              className="bg-mauve-100 rounded-4xl shadow-md overflow-hidden p-6"
-            >
-              <div className="flex items-center gap-4 mb-3">
-                <img
-                  src={author.image}
-                  alt={author.name}
-                  className="w-16 h-16 rounded-full object-cover border-2 border-mauve-300"
-                />
-                <h3 className="text-xl flex-1 font-bold text-mauve-900">
-                  {author.name}
-                </h3>
-                <button
-                  onClick={() => setEditingAuthor(author)}
-                  className="max-w-22 min-w-22 flex-1 flex items-center justify-center gap-2 py-2 bg-slate-500/80 text-mauve-100 font-medium rounded-xl hover:bg-slate-500/60"
-                >
-                  Editar
-                </button>
-                <button
-                  onClick={() => handleDelete(author.id)}
-                  className="max-w-22 min-w-22 flex-1 flex items-center justify-center gap-2 py-2 bg-red-800/70 text-mauve-100 font-medium rounded-xl hover:bg-red-800/60"
-                >
-                  Eliminar
-                </button>
+          {/* Si no hay autores, mostrar mensaje */}
+          {filteredAuthors.length === 0 ? (
+            <p className="text-mauve-600">
+              No se encontró ningun autor con el nombre buscado
+            </p>
+          ) : (
+            filteredAuthors.map((author) => (
+              <div
+                key={author.id}
+                className="bg-mauve-100 rounded-4xl shadow-md overflow-hidden p-6"
+              >
+                <div className="flex items-center gap-4 mb-3">
+                  <img
+                    src={author.image}
+                    alt={author.name}
+                    className="w-16 h-16 rounded-full object-cover border-2 border-mauve-300"
+                  />
+                  <h3 className="text-xl flex-1 font-bold text-mauve-900">
+                    {author.name}
+                  </h3>
+                  <button
+                    onClick={() => setEditingAuthor(author)}
+                    className="max-w-22 min-w-22 flex-1 flex items-center justify-center gap-2 py-2 bg-slate-500/80 text-mauve-100 font-medium rounded-xl hover:bg-slate-500/60"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => handleDelete(author.id)}
+                    className="max-w-22 min-w-22 flex-1 flex items-center justify-center gap-2 py-2 bg-red-800/70 text-mauve-100 font-medium rounded-xl hover:bg-red-800/60"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+                <p className="text-mauve-600 text-sm mb-3">
+                  {author.description}
+                </p>
+                <div className="flex items-center gap-2 text-sm text-mauve-500">
+                  {author.birthDate}
+                </div>
               </div>
-              <p className="text-mauve-600 text-sm mb-3">
-                {author.description}
-              </p>
-              <div className="flex items-center gap-2 text-sm text-mauve-500">
-                {author.birthDate}
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>

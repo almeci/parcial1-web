@@ -151,7 +151,12 @@ export default function CreateAuthors() {
             <div className="flex gap-4 pt-6">
               <button
                 type="submit"
-                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-mauve-600 text-mauve-100 font-semibold rounded-xl hover:bg-mauve-500"
+                aria-disabled={!isValid}
+                className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 font-semibold rounded-xl transition-all ${
+                  isValid
+                    ? "bg-mauve-600 text-mauve-100 hover:bg-mauve-500 cursor-pointer"
+                    : "bg-mauve-300 text-mauve-500 cursor-not-allowed opacity-60"
+                }`}
               >
                 Guardar Autor
               </button>
