@@ -1,11 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Navbar from "./components/Navbar";
 
 export default function Home() {
-  const router = useRouter();
-
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
@@ -17,24 +15,24 @@ export default function Home() {
               Bienvenido a Bookstore
             </h1>
             <p className="text-xl text-mauve-600 max-w-2xl mx-auto">
-              Aplicación realizada para el parcial 1 de programación con
-              tecnologías web
+              App realizada para el parcial 1 de programación con tecnologías
+              web
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button
-              onClick={() => router.push("/authors")}
+            <Link
+              href="/authors"
               className="flex items-center gap-2 px-8 py-4 bg-mauve-600 text-mauve-100 font-semibold rounded-xl hover:bg-mauve-500"
             >
               Ver Autores
-            </button>
-            <button
-              onClick={() => router.push("/crear")}
+            </Link>
+            <Link
+              href="/crear"
               className="flex items-center gap-2 px-8 py-4 bg-mauve-300 text-mauve-600 font-semibold rounded-xl hover:bg-mauve-200"
             >
               Crear Autor
-            </button>
+            </Link>
           </div>
         </main>
       </div>

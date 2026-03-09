@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useAuthors, type Author } from "../context/AuthorsContext";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Navbar from "../components/Navbar";
 
 export default function AuthorsPage() {
-  const router = useRouter();
   // Estado: guardar lista de autores
 
   const { authors, setAuthors, loaded, setLoaded } = useAuthors();
@@ -217,12 +216,12 @@ export default function AuthorsPage() {
           <h1 className="text-4xl font-bold text-mauve-900 mb-2">
             Lista de Autores
           </h1>
-          <button
-            onClick={() => router.push("/crear")}
+          <Link
+            href="/crear"
             className="flex items-center gap-2 px-6 py-3 bg-mauve-600 text-mauve-100 font-semibold rounded-xl hover:bg-mauve-500"
           >
             Crear Nuevo Autor
-          </button>
+          </Link>
         </div>
 
         <div className="grid grid-cols-2 gap-6">

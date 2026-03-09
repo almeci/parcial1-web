@@ -1,10 +1,10 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const router = useRouter();
 
   const isActive = (path: string) => pathname === path;
 
@@ -13,34 +13,31 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <button
-              onClick={() => router.push("/")}
-              className="flex items-center space-x-2"
-            >
+            <Link href="/" className="flex items-center space-x-2">
               <span className="text-mauve-100 text-xl font-bold hover:bg-mauve-500/50 px-2 py-1 rounded-xl">
                 Bookstore
               </span>
-            </button>
+            </Link>
           </div>
           <div className="flex space-x-4">
-            <button
-              onClick={() => router.push("/")}
+            <Link
+              href="/"
               className="px-4 py-2 rounded-xl text-mauve-100 font-medium hover:bg-mauve-500/50"
             >
               Inicio
-            </button>
-            <button
-              onClick={() => router.push("/authors")}
+            </Link>
+            <Link
+              href="/authors"
               className="px-4 py-2 rounded-xl text-mauve-100 font-medium hover:bg-mauve-500/50"
             >
               Autores
-            </button>
-            <button
-              onClick={() => router.push("/crear")}
+            </Link>
+            <Link
+              href="/crear"
               className="px-4 py-2 rounded-xl text-mauve-100 font-medium hover:bg-mauve-500/50"
             >
               Crear Autor
-            </button>
+            </Link>
           </div>
         </div>
       </div>

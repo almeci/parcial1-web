@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 import { useAuthors } from "../context/AuthorsContext";
-import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 
 export default function CreateAuthors() {
-  const router = useRouter();
   // Formulario controlado: cada field tiene su propio estado
 
   const [name, setName] = useState("");
