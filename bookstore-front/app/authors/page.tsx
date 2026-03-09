@@ -1,8 +1,9 @@
 "use client"; // porque usa hooks
 
 import { useState, useEffect } from "react";
-import { useAuthors } from "../context/AuthorsContext";
+import { useAuthors, type Author } from "../context/AuthorsContext";
 import { useRouter } from "next/navigation";
+import Navbar from "../components/Navbar";
 
 export default function AuthorsPage() {
   const router = useRouter();
@@ -10,22 +11,18 @@ export default function AuthorsPage() {
 
   const { authors, setAuthors, loaded, setLoaded } = useAuthors();
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [birthDate, setBirthDate] = useState("");
-  const [image, setImage] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const [editingAuthor, setEditingAuthor] = useState(null); // no hay nadie siendo editado inicialmente
+  const [editingAuthor, setEditingAuthor] = useState<Author | null>(null); // no hay nadie siendo editado inicialmente
 
   const handleSubmit = (e) => {
     e.preventDefault(); // evitar recarga
     setSubmitted(true);
     if (
-      !editingAuthor.name ||
-      !editingAuthor.description ||
-      !editingAuthor.birthDate ||
-      !editingAuthor.image
+      !editingAuthor?.name ||
+      !editingAuthor?.description ||
+      !editingAuthor?.birthDate ||
+      !editingAuthor?.image
     )
       return; // validar campos
     setAuthors(
@@ -49,38 +46,49 @@ export default function AuthorsPage() {
       });
   }, [loaded, setAuthors, setLoaded]);
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: number) => {
     setAuthors(authors.filter((author) => author.id !== id)); // eliminar autor por id
   };
 
   // Renderizar datos
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
       {editingAuthor && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-zinc-800 rounded-2xl p-6 w-96">
-            <h2>Editar Autor</h2>
-            <form onSubmit={handleSubmit} className="px-6 py-6 space-y-5">
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-mauve-100 rounded-2xl shadow-2xl p-8 w-full max-w-md">
+            <h2 className="text-2xl font-bold text-mauve-900 mb-6">
+              Editar Autor
+            </h2>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
-                <label htmlFor="name" className="block text-sm font-medium">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-semibold text-mauve-700"
+                >
                   Nombre
                 </label>
                 <input
                   id="name"
                   name="name"
                   type="text"
-                  value={editingAuthor.name}
+                  value={editingAuthor?.name || ""}
                   onChange={(e) =>
-                    setEditingAuthor({ ...editingAuthor, name: e.target.value })
+                    setEditingAuthor(
+                      editingAuthor
+                        ? { ...editingAuthor, name: e.target.value }
+                        : null,
+                    )
                   }
                   placeholder="Ingrese el nombre del autor"
-                  className="w-full rounded-xl border border-slate-500"
+                  className="w-full rounded-xl bg-mauve-200 px-4 py-2.5 text-mauve-900 "
                   aria-required="true"
-                  aria-invalid={submitted && !editingAuthor.name}
+                  aria-invalid={submitted && !editingAuthor?.name}
                 />
-                {submitted && !editingAuthor.name && (
-                  <p className="text-red-500 text-sm">
+                {submitted && !editingAuthor?.name && (
+                  <p className="text-rose-800 text-sm font-medium">
                     El nombre es obligatorio
                   </p>
                 )}
@@ -88,28 +96,31 @@ export default function AuthorsPage() {
               <div className="space-y-2">
                 <label
                   htmlFor="description"
-                  className="block text-sm font-medium"
+                  className="block text-sm font-semibold text-mauve-700"
                 >
                   Descripción
                 </label>
                 <input
                   id="description"
                   name="description"
-                  type="text"
-                  value={editingAuthor.description}
+                  value={editingAuthor?.description || ""}
                   onChange={(e) =>
-                    setEditingAuthor({
-                      ...editingAuthor,
-                      description: e.target.value,
-                    })
+                    setEditingAuthor(
+                      editingAuthor
+                        ? {
+                            ...editingAuthor,
+                            description: e.target.value,
+                          }
+                        : null,
+                    )
                   }
                   placeholder="Ingrese la descripción del autor"
-                  className="w-full rounded-xl border border-slate-500"
+                  className="w-full rounded-xl bg-mauve-200 px-4 py-2.5 text-mauve-900 "
                   aria-required="true"
-                  aria-invalid={submitted && !editingAuthor.description}
+                  aria-invalid={submitted && !editingAuthor?.description}
                 />
-                {submitted && !editingAuthor.description && (
-                  <p className="text-red-500 text-sm">
+                {submitted && !editingAuthor?.description && (
+                  <p className="text-rose-800 text-sm font-medium">
                     La descripción es obligatoria
                   </p>
                 )}
@@ -117,7 +128,7 @@ export default function AuthorsPage() {
               <div className="space-y-2">
                 <label
                   htmlFor="birthDate"
-                  className="block text-sm font-medium"
+                  className="block text-sm font-semibold text-mauve-700"
                 >
                   Fecha de nacimiento
                 </label>
@@ -125,55 +136,72 @@ export default function AuthorsPage() {
                   id="birthDate"
                   name="birthDate"
                   type="text"
-                  value={editingAuthor.birthDate}
+                  value={editingAuthor?.birthDate || ""}
                   onChange={(e) =>
-                    setEditingAuthor({
-                      ...editingAuthor,
-                      birthDate: e.target.value,
-                    })
+                    setEditingAuthor(
+                      editingAuthor
+                        ? {
+                            ...editingAuthor,
+                            birthDate: e.target.value,
+                          }
+                        : null,
+                    )
                   }
                   placeholder="Ingrese la fecha de nacimiento del autor"
-                  className="w-full rounded-xl border border-slate-500"
+                  className="w-full rounded-xl bg-mauve-200 px-4 py-2.5 text-mauve-900 "
                   aria-required="true"
-                  aria-invalid={submitted && !editingAuthor.birthDate}
+                  aria-invalid={submitted && !editingAuthor?.birthDate}
                 />
-                {submitted && !editingAuthor.birthDate && (
-                  <p className="text-red-500 text-sm">
+                {submitted && !editingAuthor?.birthDate && (
+                  <p className="text-rose-800 text-sm font-medium">
                     La fecha de nacimiento es obligatoria
                   </p>
                 )}
               </div>
               <div className="space-y-2">
-                <label htmlFor="image" className="block text-sm font-medium">
+                <label
+                  htmlFor="image"
+                  className="block text-sm font-semibold text-mauve-700"
+                >
                   Imagen
                 </label>
                 <input
                   id="image"
                   name="image"
                   type="text"
-                  value={editingAuthor.image}
+                  value={editingAuthor?.image || ""}
                   onChange={(e) =>
-                    setEditingAuthor({
-                      ...editingAuthor,
-                      image: e.target.value,
-                    })
+                    setEditingAuthor(
+                      editingAuthor
+                        ? {
+                            ...editingAuthor,
+                            image: e.target.value,
+                          }
+                        : null,
+                    )
                   }
                   placeholder="Ingrese la URL de la imagen del autor"
-                  className="w-full rounded-xl border border-slate-500"
+                  className="w-full rounded-xl bg-mauve-200 px-4 py-2.5 text-mauve-900 "
                   aria-required="true"
-                  aria-invalid={submitted && !editingAuthor.image}
+                  aria-invalid={submitted && !editingAuthor?.image}
                 />
-                {submitted && !editingAuthor.image && (
-                  <p className="text-red-500 text-sm">
+                {submitted && !editingAuthor?.image && (
+                  <p className="text-rose-800 text-sm font-medium">
                     La imagen es obligatoria
                   </p>
                 )}
               </div>
-              <div>
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setEditingAuthor(null)}
+                  className="flex-1 py-2.5 px-4 rounded-xl bg-mauve-300 text-mauve-700 font-medium hover:bg-mauve-200"
+                >
+                  Cancelar
+                </button>
                 <button
                   type="submit"
-                  // disabled={!isValid}
-                  className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 hover:bg-blue-800 disabled:bg-gray-500 disabled:text-gray-400"
+                  className="flex-1 py-2.5 px-4 rounded-xl bg-mauve-600 text-mauve-100 font-medium hover:bg-mauve-500"
                 >
                   Guardar
                 </button>
@@ -182,35 +210,58 @@ export default function AuthorsPage() {
           </div>
         </div>
       )}
-      <div>
-        <h1>Lista de autores</h1>
-        {authors.map(
-          (
-            author, // recorrer lista de autores
-          ) => (
-            <div key={author.id}>
-              <p>{author.name}</p>
-              <button
-                className="inline-flex items-center justify-center rounded-lg bg-yellow-600 px-4 hover:bg-yellow-700"
-                onClick={() => setEditingAuthor(author)}
-              >
-                Editar
-              </button>
-              <button
-                className="inline-flex items-center justify-center rounded-lg bg-red-500 px-4 hover:bg-red-700"
-                onClick={() => handleDelete(author.id)}
-              >
-                Eliminar
-              </button>
+
+      {/* Contenido principal */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mb-8 flex justify-between items-center">
+          <h1 className="text-4xl font-bold text-mauve-900 mb-2">
+            Lista de Autores
+          </h1>
+          <button
+            onClick={() => router.push("/crear")}
+            className="flex items-center gap-2 px-6 py-3 bg-mauve-600 text-mauve-100 font-semibold rounded-xl hover:bg-mauve-500"
+          >
+            Crear Nuevo Autor
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 gap-6">
+          {authors.map((author) => (
+            <div
+              key={author.id}
+              className="bg-mauve-100 rounded-4xl shadow-md overflow-hidden p-6"
+            >
+              <div className="flex items-center gap-4 mb-3">
+                <img
+                  src={author.image}
+                  alt={author.name}
+                  className="w-16 h-16 rounded-full object-cover border-2 border-mauve-300"
+                />
+                <h3 className="text-xl flex-1 font-bold text-mauve-900">
+                  {author.name}
+                </h3>
+                <button
+                  onClick={() => setEditingAuthor(author)}
+                  className="max-w-22 min-w-22 flex-1 flex items-center justify-center gap-2 py-2 bg-slate-500/80 text-mauve-100 font-medium rounded-xl hover:bg-slate-500/60"
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={() => handleDelete(author.id)}
+                  className="max-w-22 min-w-22 flex-1 flex items-center justify-center gap-2 py-2 bg-red-800/70 text-mauve-100 font-medium rounded-xl hover:bg-red-800/60"
+                >
+                  Eliminar
+                </button>
+              </div>
+              <p className="text-mauve-600 text-sm mb-3">
+                {author.description}
+              </p>
+              <div className="flex items-center gap-2 text-sm text-mauve-500">
+                {author.birthDate}
+              </div>
             </div>
-          ),
-        )}
-        <button
-          className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 hover:bg-blue-800"
-          onClick={() => router.push("/crear")}
-        >
-          Crear nuevo autor
-        </button>
+          ))}
+        </div>
       </div>
     </div>
   );

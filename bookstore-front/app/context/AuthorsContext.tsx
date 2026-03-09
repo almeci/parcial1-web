@@ -1,12 +1,27 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 
-const AuthorsContext = createContext(null); // contenedor global vacio
+interface Author {
+  id: number;
+  name: string;
+  description: string;
+  birthDate: string;
+  image: string;
+}
 
-export function AuthorsProvider({ children }) {
+interface AuthorsContextType {
+  authors: Author[];
+  setAuthors: (authors: Author[]) => void;
+  loaded: boolean;
+  setLoaded: (loaded: boolean) => void;
+}
+
+const AuthorsContext = createContext<AuthorsContextType | null>(null); // contenedor global vacio
+
+export function AuthorsProvider({ children }: { children: ReactNode }) {
   // componente que envuelve la app y da acceso a todos sus hijos
-  const [authors, setAuthors] = useState([]); // caja vacia
+  const [authors, setAuthors] = useState<Author[]>([]); // caja vacia
   const [loaded, setLoaded] = useState(false);
 
   return (
@@ -17,5 +32,11 @@ export function AuthorsProvider({ children }) {
 }
 
 export function useAuthors() {
-  return useContext(AuthorsContext); // acceder a la caja desde cualquier lado
+  const context = useContext(AuthorsContext); // acceder a la caja desde cualquier lado
+  if (!context) {
+    throw new Error("useAuthors must be used within an AuthorsProvider");
+  }
+  return context;
 }
+
+export type { Author };
